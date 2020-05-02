@@ -1,6 +1,8 @@
 package com.lyash.basicsecurity.basicsecurity.configs.security;
 
+import com.lyash.basicsecurity.basicsecurity.configs.basic.BasicAuthenticationEntryPoint;
 import com.lyash.basicsecurity.basicsecurity.service.impl.UserDetailsServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -15,6 +17,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
+    private final BasicAuthenticationEntryPoint basicAuthenticationEntryPoint;
     private final UserDetailsService userDetailsService;
 
     @Bean
@@ -22,8 +25,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return new BCryptPasswordEncoder();
     };
 
-
-    public SecurityConfig(UserDetailsServiceImpl userDetailsService) {
+    @Autowired
+    public SecurityConfig(BasicAuthenticationEntryPoint basicAuthenticationEntryPoint, UserDetailsServiceImpl userDetailsService) {
+        this.basicAuthenticationEntryPoint = basicAuthenticationEntryPoint;
         this.userDetailsService = userDetailsService;
     }
 
@@ -36,14 +40,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
 
         http
-                .httpBasic()
+                .httpBasic().authenticationEntryPoint(basicAuthenticationEntryPoint)
                 .and()
                 .authorizeRequests()
                 .antMatchers(HttpMethod.GET, "/api/userinfo").hasRole("USER")
                 .antMatchers(HttpMethod.GET, "/api/admininfo").hasRole("ADMIN")
                 .and()
-                .csrf().disable()
                 .formLogin();
     }
+
+
 
 }

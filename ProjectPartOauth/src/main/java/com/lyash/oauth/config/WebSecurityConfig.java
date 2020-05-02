@@ -53,4 +53,5 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             return userDetailsRepository.save(user);
         };
     }
+
 }
