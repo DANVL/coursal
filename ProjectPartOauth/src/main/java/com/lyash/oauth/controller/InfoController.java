@@ -3,7 +3,6 @@ package com.lyash.oauth.controller;
 import com.lyash.oauth.data.entity.User;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,7 +20,7 @@ public class InfoController {
     }
 
     @GetMapping(path = "admininfo")
-    public ResponseEntity<String> getInfoA(){
-        return new ResponseEntity<>("info for admin", HttpStatus.OK);
+    public ResponseEntity<User> getInfoA(@AuthenticationPrincipal User admin){
+        return new ResponseEntity<>(admin, HttpStatus.OK);
     }
 }

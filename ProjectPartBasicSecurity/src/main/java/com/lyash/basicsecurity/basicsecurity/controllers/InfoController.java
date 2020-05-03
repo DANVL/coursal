@@ -13,13 +13,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api")
 public class InfoController {
 
-    @PreAuthorize("hasRole('USER')")
     @GetMapping(path = "userinfo")
     public ResponseEntity<String> getInfo(){
         return new ResponseEntity<>("info for user", HttpStatus.OK);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping(path = "admininfo")
     public ResponseEntity<String> getInfoA(){
         return new ResponseEntity<>("info for admin", HttpStatus.OK);

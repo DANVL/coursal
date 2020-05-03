@@ -3,6 +3,7 @@ package com.lyash.tokensecurity.data.dao.impl;
 import com.lyash.tokensecurity.data.dao.UserDao;
 import com.lyash.tokensecurity.data.entity.Role;
 import com.lyash.tokensecurity.data.entity.User;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -11,11 +12,11 @@ public class UserDaoImpl implements UserDao {
     public User getUser(String username) {
         if(username.equals("admin")){
             return new User(
-                    "1","admin","pasword",
+                    "1","admin",new BCryptPasswordEncoder().encode("password"),
                     "email", Role.ROLE_ADMIN);
         }else if(username.equals("user")){
             return new User(
-                    "1","username","pasword",
+                    "1","user",new BCryptPasswordEncoder().encode("password"),
                     "email", Role.ROLE_USER);
         }
         return null;
@@ -29,7 +30,7 @@ public class UserDaoImpl implements UserDao {
                     "email", Role.ROLE_ADMIN);
         }else if(username.equals("user") && password.equals("password")){
             return new User(
-                    "1","username","pasword",
+                    "1","user","pasword",
                     "email", Role.ROLE_USER);
         }
         return null;

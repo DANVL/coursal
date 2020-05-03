@@ -23,7 +23,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
-    };
+    }
 
     @Autowired
     public SecurityConfig(BasicAuthenticationEntryPoint basicAuthenticationEntryPoint, UserDetailsServiceImpl userDetailsService) {

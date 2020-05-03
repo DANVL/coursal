@@ -30,10 +30,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 )
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
-    private JwtAuthenticationEntryPoint unauthorizedHandler;
-    private UserDetailsService userDetailsService;
-    private BCryptPasswordEncoder bCryptPasswordEncoder;
-    private TokenProvider tokenProvider;
+    private final JwtAuthenticationEntryPoint unauthorizedHandler;
+    private final UserDetailsService userDetailsService;
+
+    private final TokenProvider tokenProvider;
 
     @Autowired
     public SecurityConfiguration(JwtAuthenticationEntryPoint unauthorizedHandler,
@@ -42,12 +42,16 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         this.unauthorizedHandler = unauthorizedHandler;
         this.userDetailsService = userDetailsService;
         this.tokenProvider = tokenProvider;
-        this.bCryptPasswordEncoder = new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public BCryptPasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 
     @Override
     protected void configure(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
-        authenticationManagerBuilder.userDetailsService(userDetailsService).passwordEncoder(bCryptPasswordEncoder);
+        authenticationManagerBuilder.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
     }
 
     @Bean(BeanIds.AUTHENTICATION_MANAGER)
@@ -56,6 +60,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         return super.authenticationManagerBean();
     }
 
+    @Override
     public void configure(WebSecurity webSecurity) {
         webSecurity
                 .ignoring()
@@ -70,10 +75,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .exceptionHandling().authenticationEntryPoint(unauthorizedHandler)
                 .and()
                 .sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)// without session
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .anyRequest().authenticated()//other URLS only authenticated( with token)
+                .anyRequest().authenticated()
                 .and()
                 .anonymous()
                 .and()

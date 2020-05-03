@@ -24,7 +24,7 @@ public class TokenProvider {
 
     public String provideToken(User user) {
 
-        Map<String, Object> claims = new HashMap<>(){{
+        Map<String, Object> claims = new HashMap<>() {{
             put("id", user.getId());
             put("username", user.getUsername());
             put("email", user.getEmail());
@@ -53,16 +53,8 @@ public class TokenProvider {
         try {
             Jwts.parser().setSigningKey(SECRET).parseClaimsJws(token);
             return true;
-        } catch (SignatureException ex) {
-            System.err.println("Invalid JWT Signature");
-        } catch (MalformedJwtException ex) {
-            System.err.println("Invalid JWT Token");
-        } catch (ExpiredJwtException ex) {
-            System.err.println("Expired JWT token");
-        } catch (UnsupportedJwtException ex) {
-            System.err.println("Unsupported JWT token");
-        } catch (IllegalArgumentException ex) {
-            System.err.println("JWT claims string is empty");
+        } catch (Exception ex) {
+            System.err.println("Exception: " + ex);
         }
         return false;
     }

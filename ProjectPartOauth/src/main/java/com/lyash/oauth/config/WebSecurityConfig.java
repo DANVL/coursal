@@ -23,32 +23,28 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers(HttpMethod.GET, "/api/userinfo").hasRole("USER")
                 .antMatchers(HttpMethod.GET, "/api/admininfo").hasRole("ADMIN")
-                .anyRequest().authenticated()
-                .and()
-                .csrf().disable();
+                .anyRequest().authenticated();
     }
 
     @Bean
     public PrincipalExtractor principalExtractor(UserDetailsRepository userDetailsRepository){
         return map  ->
         {
-            String id = (String) map.get("sub");
-
-            //Can vary depends on your configuration
-            User user = userDetailsRepository.findById(id).orElseGet(() -> {
+            String id = String.valueOf(map.get("sub"));
+            User user = userDetailsRepository.findById(id)
+                    .orElseGet(() -> {
                 User newUser = new User();
 
                 newUser.setId(id);
-                newUser.setName((String) map.get("name"));
-                newUser.setEmail((String) map.get("email"));
-                newUser.setGender((String) map.get("gender"));
-                newUser.setLocale((String) map.get("locale"));
-                newUser.setUserpic((String) map.get("picture"));
+                newUser.setName(String.valueOf(map.get("name")));
+                newUser.setEmail(String.valueOf(map.get("email")));
+                newUser.setGender(String.valueOf(map.get("gender")));
+                newUser.setLocale(String.valueOf(map.get("locale")));
+                newUser.setUserpic(String.valueOf(map.get("picture")));
+                newUser.setRole(Role.ROLE_USER);
 
                 return newUser;
             });
-
-            user.setRole(Role.ROLE_USER);
 
             return userDetailsRepository.save(user);
         };
