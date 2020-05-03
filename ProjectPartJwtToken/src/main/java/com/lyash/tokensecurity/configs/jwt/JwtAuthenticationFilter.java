@@ -28,26 +28,27 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                                     FilterChain filterChain) throws ServletException, IOException {
         try {
             String jwtToken = getJWTFromRequest(httpServletRequest);
-
             if (StringUtils.hasText(jwtToken) && tokenProvider.validateToken(jwtToken)) {
-
-                String usernameFromJwt = tokenProvider.getUsernameFromJwt(jwtToken);
-
-                if (StringUtils.isEmpty(usernameFromJwt)) {
-                    throw new UsernameNotFoundException("Username from JWT not found");
-                }
-
-                Authentication authentication = tokenProvider.getAuthentication(jwtToken);
-
-                if (authentication != null) {
-                    SecurityContextHolder.getContext().setAuthentication(authentication);
-                }
-
+                insideValidation(jwtToken);
             }
         } catch (Exception ex) {
-            System.err.println("Could not set user authentication in security context: "+ex);
+            System.err.println("Could not set authentication in context: "+ex);
         }
         filterChain.doFilter(httpServletRequest, httpServletResponse);
+    }
+
+    private void insideValidation(String jwtToken) {
+        String usernameFromJwt = tokenProvider.getUsernameFromJwt(jwtToken);
+
+        if (StringUtils.isEmpty(usernameFromJwt)) {
+            throw new UsernameNotFoundException("Username from JWT not found");
+        }
+
+        Authentication authentication = tokenProvider.getAuthentication(jwtToken);
+
+        if (authentication != null) {
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+        }
     }
 
     private String getJWTFromRequest(HttpServletRequest request) {
