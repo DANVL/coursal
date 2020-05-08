@@ -18,9 +18,8 @@ public class InfoController {
     }
 
     @GetMapping(path = "info")
-    public String displayMessage()
+    public String userInfo()
     {
-        String remoteMessage = serverService.getInfo();
-        return "User: " + remoteMessage;
+        return "User info: " + serverService.getInfo();
     }
 }

@@ -19,7 +19,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 and().userDetailsService(userDetailsService());
     }
 
-
     @Bean
     public UserDetailsService userDetailsService() {
         return username -> {

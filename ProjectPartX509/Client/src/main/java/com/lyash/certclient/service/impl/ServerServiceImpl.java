@@ -8,8 +8,8 @@ import org.springframework.web.client.RestTemplate;
 public class ServerServiceImpl implements ServerService {
 
     public ServerServiceImpl() {
-        javax.net.ssl.HttpsURLConnection.setDefaultHostnameVerifier(
-                (hostname, sslSession) -> hostname.equals("localhost"));
+        javax.net.ssl.HttpsURLConnection
+                .setDefaultHostnameVerifier((hostname, sslSession) -> hostname.equals("localhost"));
     }
 
     @Override

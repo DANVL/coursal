@@ -1,6 +1,6 @@
 package com.lyash.tokensecurity.services.impl;
 
-import com.lyash.tokensecurity.configs.jwt.TokenProvider;
+import com.lyash.tokensecurity.configs.token.TokenProvider;
 import com.lyash.tokensecurity.data.entity.User;
 import com.lyash.tokensecurity.services.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;

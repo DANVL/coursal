@@ -1,4 +1,4 @@
-package com.lyash.tokensecurity.configs.jwt;
+package com.lyash.tokensecurity.configs.token;
 
 import com.lyash.tokensecurity.data.entity.User;
 import org.springframework.security.core.GrantedAuthority;
@@ -6,17 +6,16 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 
-public class JwtUser implements UserDetails {
+public class TokenUser implements UserDetails {
 
     private String username;
 
     private String password;
 
-
     private Collection<? extends GrantedAuthority> authorities;
 
 
-    public JwtUser(User user, Collection<? extends GrantedAuthority> authorities) {
+    public TokenUser(User user, Collection<? extends GrantedAuthority> authorities) {
         this.username = user.getUsername();
         this.password = user.getPassword();
         this.authorities = authorities;

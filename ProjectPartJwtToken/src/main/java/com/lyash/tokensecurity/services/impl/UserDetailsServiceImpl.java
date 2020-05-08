@@ -1,6 +1,6 @@
 package com.lyash.tokensecurity.services.impl;
 
-import com.lyash.tokensecurity.configs.jwt.JwtUser;
+import com.lyash.tokensecurity.configs.token.TokenUser;
 import com.lyash.tokensecurity.data.entity.User;
 import com.lyash.tokensecurity.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +21,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
         User user = userService.getUser(s);
-        return new JwtUser(user, new ArrayList<>() {{
+        return new TokenUser(user, new ArrayList<>() {{
             add(new SimpleGrantedAuthority(user.getRole().toString()));
         }});
     }

@@ -13,8 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController {
 
     @GetMapping(path = "info")
-    public String helloController()
-    {
+    public String helloController() {
         String loggedUser;
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 

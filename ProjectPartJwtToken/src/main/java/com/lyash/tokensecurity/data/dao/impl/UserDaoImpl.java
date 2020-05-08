@@ -30,7 +30,7 @@ public class UserDaoImpl implements UserDao {
                     "1","admin",new BCryptPasswordEncoder().encode("password"),
                     "email", Role.ROLE_ADMIN);
         }else if(username.equals("user")
-                && password.equals(new BCryptPasswordEncoder().encode("password"))){
+                && password.equals("password")){
             return new User(
                     "1","user",new BCryptPasswordEncoder().encode("password"),
                     "email", Role.ROLE_USER);

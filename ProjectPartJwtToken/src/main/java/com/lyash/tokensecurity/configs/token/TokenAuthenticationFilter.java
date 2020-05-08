@@ -1,4 +1,4 @@
-package com.lyash.tokensecurity.configs.jwt;
+package com.lyash.tokensecurity.configs.token;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -13,13 +13,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-public class JwtAuthenticationFilter extends OncePerRequestFilter {
+public class TokenAuthenticationFilter extends OncePerRequestFilter {
 
 
     private final TokenProvider tokenProvider;
 
     @Autowired
-    public JwtAuthenticationFilter(TokenProvider tokenProvider) {
+    public TokenAuthenticationFilter(TokenProvider tokenProvider) {
         this.tokenProvider = tokenProvider;
     }
 
@@ -27,34 +27,35 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse,
                                     FilterChain filterChain) throws ServletException, IOException {
         try {
-            String jwtToken = getJWTFromRequest(httpServletRequest);
+            String jwtToken = getToken(httpServletRequest);
             if (StringUtils.hasText(jwtToken) && tokenProvider.validateToken(jwtToken)) {
-                insideValidation(jwtToken);
+                authenticationValidation(jwtToken);
             }
         } catch (Exception ex) {
-            System.err.println("Could not set authentication in context: "+ex);
+            System.err.println("Could not set authentication in context: " + ex);
         }
         filterChain.doFilter(httpServletRequest, httpServletResponse);
     }
 
-    private void insideValidation(String jwtToken) {
-        String usernameFromJwt = tokenProvider.getUsernameFromJwt(jwtToken);
+    private void authenticationValidation(String jwtToken) {
+        String username = tokenProvider.getUsername(jwtToken);
 
-        if (StringUtils.isEmpty(usernameFromJwt)) {
+        if (StringUtils.isEmpty(username)) {
             throw new UsernameNotFoundException("Username from JWT not found");
         }
 
-        Authentication authentication = tokenProvider.getAuthentication(jwtToken);
+        Authentication authentication = tokenProvider.getAuth(jwtToken);
 
         if (authentication != null) {
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }
     }
 
-    private String getJWTFromRequest(HttpServletRequest request) {
-        String bearerToken = request.getHeader("Authorization");
-        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
-            return bearerToken.substring(7);
+    private String getToken(HttpServletRequest request) {
+        String token = request.getHeader("Authorization");
+        if (token.startsWith("Bearer ")
+                && StringUtils.hasText(token)) {
+            return token.substring(7);
         }
         return null;
     }

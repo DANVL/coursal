@@ -1,15 +1,13 @@
 package com.lyash.tokensecurity.configs.security;
 
 
-import com.lyash.tokensecurity.configs.jwt.JwtAuthenticationEntryPoint;
-import com.lyash.tokensecurity.configs.jwt.JwtConfigurer;
-import com.lyash.tokensecurity.configs.jwt.TokenProvider;
+import com.lyash.tokensecurity.configs.token.TokenAuthenticationEntryPoint;
+import com.lyash.tokensecurity.configs.token.TokenConfigurer;
+import com.lyash.tokensecurity.configs.token.TokenProvider;
 import com.lyash.tokensecurity.services.impl.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.BeanIds;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -30,13 +28,13 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 )
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
-    private final JwtAuthenticationEntryPoint unauthorizedHandler;
+    private final TokenAuthenticationEntryPoint unauthorizedHandler;
     private final UserDetailsService userDetailsService;
 
     private final TokenProvider tokenProvider;
 
     @Autowired
-    public SecurityConfiguration(JwtAuthenticationEntryPoint unauthorizedHandler,
+    public SecurityConfiguration(TokenAuthenticationEntryPoint unauthorizedHandler,
                                  UserDetailsServiceImpl userDetailsService,
                                  TokenProvider tokenProvider) {
         this.unauthorizedHandler = unauthorizedHandler;
@@ -52,12 +50,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
         authenticationManagerBuilder.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
-    }
-
-    @Bean(BeanIds.AUTHENTICATION_MANAGER)
-    @Override
-    public AuthenticationManager authenticationManagerBean() throws Exception {
-        return super.authenticationManagerBean();
     }
 
     @Override
@@ -82,8 +74,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .and()
                 .anonymous()
                 .and()
-                .apply(new JwtConfigurer(tokenProvider));
-
-
+                .apply(new TokenConfigurer(tokenProvider));
     }
 }
