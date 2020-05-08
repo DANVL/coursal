@@ -38,12 +38,6 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
     }
 
     private void authenticationValidation(String jwtToken) {
-        String username = tokenProvider.getUsername(jwtToken);
-
-        if (StringUtils.isEmpty(username)) {
-            throw new UsernameNotFoundException("Username from JWT not found");
-        }
-
         Authentication authentication = tokenProvider.getAuth(jwtToken);
 
         if (authentication != null) {

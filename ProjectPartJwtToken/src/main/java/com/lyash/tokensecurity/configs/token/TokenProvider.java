@@ -51,8 +51,8 @@ public class TokenProvider {
             return true;
         } catch (Exception ex) {
             System.err.println("Exception: " + ex);
+            return false;
         }
-        return false;
     }
 
 
